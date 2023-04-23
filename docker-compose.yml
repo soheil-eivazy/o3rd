@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  o3rd_db:
+    container_name: o3rd_db
+    platform: linux/x86_64
+    image: mongo:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - o3rd_db:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - o3rd_network
+
+  o3rd_persona:
+    container_name: o3rd_persona
+    image: ./persona/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    networks:
+      - o3rd_network
+
+  o3rd_shadow:
+      container_name: o3rd_persona
+      image: ./shadow/Dockerfile
+      restart: always
+      env_file:
+        - .env
+      ports:
+        - 8080:8080
+      networks:
+        - o3rd_network
+
+  o3rd_nucleus:
+    container_name: o3rd_persona
+    image: ./nucleus/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    networks:
+      - o3rd_network
+
+
+
+volumes:
+  - o3rd_db:
+
+networks:
+  - o3rd_network:
