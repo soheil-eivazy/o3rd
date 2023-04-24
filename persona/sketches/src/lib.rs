@@ -22,10 +22,10 @@ pub fn graphing() {
     let node3 = Node::new(2, 1);
     let node4 = Node::new(2, 2);
 
-    let edge1 = (node1.id(), node2.id());
-    let edge2 = (node1.id(), node3.id());
-    let edge3 = (node1.id(), node4.id());
-    let edge4 = (node2.id(), node4.id());
+    let edge1 = (node1, node2);
+    let edge2 = (node1, node3);
+    let edge3 = (node1, node4);
+    let edge4 = (node2, node4);
 
     graph.add_node(node1);
     graph.add_node(node2);
@@ -49,7 +49,16 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+        let mut maze = maze_runner::maze::Maze::new(10, 10, maths::graph::GraphSearchMethod::BreadthFirst);
+    
+        let mut done = false;
+        while !done {
+            let res = maze.run();
+            dbg!(&res);
+
+            if res.len() == 0 {
+                done = true;
+            }
+        }
     }
 }

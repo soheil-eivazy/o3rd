@@ -14,14 +14,14 @@ pub fn generate_graph(plane: &Vec<Vec<u8>>) -> Graph {
                 continue;
             }
 
-            let node = Node::new(i as i32, j as i32);
-            if graph.add_node(node.clone()) {
+            let node = Node::new(i as u32, j as u32);
+            if graph.add_node(node) {
                 continue;
             }
 
             let mut ti = i + 1;
             while ti < plane.len() {
-                if add_edge(&mut graph, &node, plane, ti, j) {
+                if add_edge(&mut graph, node, plane, ti, j) {
                     break;
                 }
 
@@ -31,7 +31,7 @@ pub fn generate_graph(plane: &Vec<Vec<u8>>) -> Graph {
             if i > 0 {
                 let mut ti = i - 1;
                 while ti > 0 {
-                    if add_edge(&mut graph, &node, plane, ti, j) {
+                    if add_edge(&mut graph, node, plane, ti, j) {
                         break;
                     }
     
@@ -41,7 +41,7 @@ pub fn generate_graph(plane: &Vec<Vec<u8>>) -> Graph {
 
             let mut tj = j + 1;
             while tj > 0 && tj < plane.len() {
-                if add_edge(&mut graph, &node, plane, i, tj) {
+                if add_edge(&mut graph, node, plane, i, tj) {
                     break;
                 }
 
@@ -51,7 +51,7 @@ pub fn generate_graph(plane: &Vec<Vec<u8>>) -> Graph {
             if j > 0 {
                 let mut tj = j - 1;
                 while tj > 0 {
-                    if add_edge(&mut graph, &node, plane, i, tj) {
+                    if add_edge(&mut graph, node, plane, i, tj) {
                         break;
                     }
     
@@ -65,7 +65,7 @@ pub fn generate_graph(plane: &Vec<Vec<u8>>) -> Graph {
 
 
 
-fn add_edge(graph: &mut Graph, node: &Node, plane: &Vec<Vec<u8>>, i: usize, j: usize) -> bool {
+fn add_edge(graph: &mut Graph, node: Node, plane: &Vec<Vec<u8>>, i: usize, j: usize) -> bool {
     if plane[i][j] != 1 {
         return true;
     }
@@ -74,9 +74,9 @@ fn add_edge(graph: &mut Graph, node: &Node, plane: &Vec<Vec<u8>>, i: usize, j: u
         return false;
     }
     
-    let next_node = Node::new(i as i32, j as i32);
+    let next_node = Node::new(i as u32, j as u32);
     graph.add_node(next_node.clone());
-    graph.add_edge((node.id(), next_node.id()));
+    graph.add_edge((node, next_node));
     true
 }
 
