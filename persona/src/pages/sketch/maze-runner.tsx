@@ -23,6 +23,7 @@ let plane: Uint8Array
 const mazeRunner = () => {
 
 	const setup = (p5: p5Types, canvasParentRef: Element) => {
+
 		p5.frameRate(30);
 		let size = window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth
 		size = size - (size % 100)
@@ -49,7 +50,6 @@ const mazeRunner = () => {
 			return 
 		}
 
-		
 		if (step[0] == 1) {
 			draw_plane(p5)
 			draw_solved(p5, step)
@@ -58,12 +58,6 @@ const mazeRunner = () => {
 		} else {
 			draw_steps(p5, step)
 		}
-		
-		
-		
-
-		
-
 		// const cellsPtr = maze.cells();
 	}
 
@@ -84,8 +78,7 @@ const mazeRunner = () => {
 			)
 
 			i++
-	}
-
+		}
 	}
 
 	const draw_solved = (p5: p5Types, step: Uint16Array) => {

@@ -178,131 +178,131 @@ impl GraphSearch for BreadthFirst {
 
 
 
-pub struct DepthFirst {
-    graph: Graph,
-    first: Node,
-    last: Node,
-    current: VecDeque<Path>,
-    beaten_path: HashMap<Node, Node>,
-    count: u32,
-}
+// pub struct DepthFirst {
+//     graph: Graph,
+//     first: Node,
+//     last: Node,
+//     current: VecDeque<Path>,
+//     beaten_path: HashMap<Node, Node>,
+//     count: u32,
+// }
 
-impl DepthFirst {
-    pub fn new(graph:Graph) -> Self {
-        let (first, last) = graph.first_and_last();
-        let mut current = VecDeque::new();
-        current.push_back(Path{node:first, parent:None});
-        dbg!(graph.edges.len());
-        DepthFirst { 
-            graph,
-            first,
-            last,
-            current,
-            beaten_path: HashMap::new(),
-            count: 0,
-        }
-    }
-}
-
-
-impl GraphSearch for DepthFirst {
-    fn next(&mut self) -> SearchResult {
-        // procedure DFS_iterative(G, v) is
-        //     let S be a stack
-        //     label v as discovered
-        //     S.push(iterator of G.adjacentEdges(v))
-        //     while S is not empty do
-        //         if S.peek().hasNext() then
-        //             w = S.peek().next()
-        //             if w is not labeled as discovered then
-        //                 label w as discovered
-        //                 S.push(iterator of G.adjacentEdges(w))
-        //         else
-        //             S.pop()
-
-        SearchResult::Failed
-    }
-}
-
-pub struct AStar {
-    graph: Graph,
-    first: Node,
-    last: Node,
-    current: VecDeque<Path>,
-    beaten_path: HashMap<Node, Node>,
-    count: u32,
-}
-
-impl AStar {
-    pub fn new(graph:Graph) -> Self {
-        let (first, last) = graph.first_and_last();
-        let mut current = VecDeque::new();
-        current.push_back(Path{node:first, parent:None});
-        dbg!(graph.edges.len());
-        AStar { 
-            graph,
-            first,
-            last,
-            current,
-            beaten_path: HashMap::new(),
-            count: 0,
-        }
-    }
-}
+// impl DepthFirst {
+//     pub fn new(graph:Graph) -> Self {
+//         let (first, last) = graph.first_and_last();
+//         let mut current = VecDeque::new();
+//         current.push_back(Path{node:first, parent:None});
+//         dbg!(graph.edges.len());
+//         DepthFirst { 
+//             graph,
+//             first,
+//             last,
+//             current,
+//             beaten_path: HashMap::new(),
+//             count: 0,
+//         }
+//     }
+// }
 
 
-impl GraphSearch for AStar {
-    fn next(&mut self) -> SearchResult {
-    // function reconstruct_path(cameFrom, current)
-    //     total_path := {current}
-    //     while current in cameFrom.Keys:
-    //         current := cameFrom[current]
-    //         total_path.prepend(current)
-    //     return total_path
+// impl GraphSearch for DepthFirst {
+//     fn next(&mut self) -> SearchResult {
+//         // procedure DFS_iterative(G, v) is
+//         //     let S be a stack
+//         //     label v as discovered
+//         //     S.push(iterator of G.adjacentEdges(v))
+//         //     while S is not empty do
+//         //         if S.peek().hasNext() then
+//         //             w = S.peek().next()
+//         //             if w is not labeled as discovered then
+//         //                 label w as discovered
+//         //                 S.push(iterator of G.adjacentEdges(w))
+//         //         else
+//         //             S.pop()
 
-    // // A* finds a path from start to goal.
-    // // h is the heuristic function. h(n) estimates the cost to reach goal from node n.
-    // function A_Star(start, goal, h)
-    //     // The set of discovered nodes that may need to be (re-)expanded.
-    //     // Initially, only the start node is known.
-    //     // This is usually implemented as a min-heap or priority queue rather than a hash-set.
-    //     openSet := {start}
+//         SearchResult::Failed
+//     }
+// }
 
-    //     // For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from the start
-    //     // to n currently known.
-    //     cameFrom := an empty map
+// pub struct AStar {
+//     graph: Graph,
+//     first: Node,
+//     last: Node,
+//     current: VecDeque<Path>,
+//     beaten_path: HashMap<Node, Node>,
+//     count: u32,
+// }
 
-    //     // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
-    //     gScore := map with default value of Infinity
-    //     gScore[start] := 0
+// impl AStar {
+//     pub fn new(graph:Graph) -> Self {
+//         let (first, last) = graph.first_and_last();
+//         let mut current = VecDeque::new();
+//         current.push_back(Path{node:first, parent:None});
+//         dbg!(graph.edges.len());
+//         AStar { 
+//             graph,
+//             first,
+//             last,
+//             current,
+//             beaten_path: HashMap::new(),
+//             count: 0,
+//         }
+//     }
+// }
 
-    //     // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
-    //     // how cheap a path could be from start to finish if it goes through n.
-    //     fScore := map with default value of Infinity
-    //     fScore[start] := h(start)
 
-    //     while openSet is not empty
-    //         // This operation can occur in O(Log(N)) time if openSet is a min-heap or a priority queue
-    //         current := the node in openSet having the lowest fScore[] value
-    //         if current = goal
-    //             return reconstruct_path(cameFrom, current)
+// impl GraphSearch for AStar {
+//     fn next(&mut self) -> SearchResult {
+//     // function reconstruct_path(cameFrom, current)
+//     //     total_path := {current}
+//     //     while current in cameFrom.Keys:
+//     //         current := cameFrom[current]
+//     //         total_path.prepend(current)
+//     //     return total_path
 
-    //         openSet.Remove(current)
-    //         for each neighbor of current
-    //             // d(current,neighbor) is the weight of the edge from current to neighbor
-    //             // tentative_gScore is the distance from start to the neighbor through current
-    //             tentative_gScore := gScore[current] + d(current, neighbor)
-    //             if tentative_gScore < gScore[neighbor]
-    //                 // This path to neighbor is better than any previous one. Record it!
-    //                 cameFrom[neighbor] := current
-    //                 gScore[neighbor] := tentative_gScore
-    //                 fScore[neighbor] := tentative_gScore + h(neighbor)
-    //                 if neighbor not in openSet
-    //                     openSet.add(neighbor)
+//     // // A* finds a path from start to goal.
+//     // // h is the heuristic function. h(n) estimates the cost to reach goal from node n.
+//     // function A_Star(start, goal, h)
+//     //     // The set of discovered nodes that may need to be (re-)expanded.
+//     //     // Initially, only the start node is known.
+//     //     // This is usually implemented as a min-heap or priority queue rather than a hash-set.
+//     //     openSet := {start}
 
-    //     // Open set is empty but goal was never reached
-    //     return failure
+//     //     // For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from the start
+//     //     // to n currently known.
+//     //     cameFrom := an empty map
 
-        SearchResult::Failed
-    }
-}
+//     //     // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
+//     //     gScore := map with default value of Infinity
+//     //     gScore[start] := 0
+
+//     //     // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
+//     //     // how cheap a path could be from start to finish if it goes through n.
+//     //     fScore := map with default value of Infinity
+//     //     fScore[start] := h(start)
+
+//     //     while openSet is not empty
+//     //         // This operation can occur in O(Log(N)) time if openSet is a min-heap or a priority queue
+//     //         current := the node in openSet having the lowest fScore[] value
+//     //         if current = goal
+//     //             return reconstruct_path(cameFrom, current)
+
+//     //         openSet.Remove(current)
+//     //         for each neighbor of current
+//     //             // d(current,neighbor) is the weight of the edge from current to neighbor
+//     //             // tentative_gScore is the distance from start to the neighbor through current
+//     //             tentative_gScore := gScore[current] + d(current, neighbor)
+//     //             if tentative_gScore < gScore[neighbor]
+//     //                 // This path to neighbor is better than any previous one. Record it!
+//     //                 cameFrom[neighbor] := current
+//     //                 gScore[neighbor] := tentative_gScore
+//     //                 fScore[neighbor] := tentative_gScore + h(neighbor)
+//     //                 if neighbor not in openSet
+//     //                     openSet.add(neighbor)
+
+//     //     // Open set is empty but goal was never reached
+//     //     return failure
+
+//         SearchResult::Failed
+//     }
+// }
