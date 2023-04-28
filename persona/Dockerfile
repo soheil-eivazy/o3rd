@@ -1,14 +1,30 @@
+FROM rust:latest as build
+
+RUN rustup target add wasm32-unknown-unknown
+RUN cargo install wasm-bindgen-cli wasm-pack
+
+WORKDIR /app
+COPY sketches ./
+
+RUN wasm-pack build --release --target web
+
+
 FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json next.config.js ./
+COPY --from=build /app/ ./sketches
 RUN  npm install --production
+
 
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/sketches ./sketches
 COPY . .
+
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -25,6 +41,7 @@ RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/sketches ./sketches
 COPY --from=builder /app/package.json ./package.json
 
 USER nextjs

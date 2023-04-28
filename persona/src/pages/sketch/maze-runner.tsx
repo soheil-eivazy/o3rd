@@ -28,8 +28,8 @@ const mazeRunner = () => {
 		size = size - (size % 100)
 		p5.createCanvas(size, size).parent(canvasParentRef)
 
-		mazeWidth = 400
-		mazeHeight = 400
+		mazeWidth = 200
+		mazeHeight = 200
 		cellWidth = size / mazeWidth
 		cellHeight = size / mazeHeight
 

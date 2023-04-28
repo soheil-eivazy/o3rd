@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   webpack(config) {
-    config.experiments = { asyncWebAssembly: true }
+    config.experiments = { 
+      asyncWebAssembly: true,
+      layers: true
+    }
     return config
   },
 }
