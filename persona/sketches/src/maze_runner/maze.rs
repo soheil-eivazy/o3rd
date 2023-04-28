@@ -1,84 +1,102 @@
-use std::collections::HashMap;
+use wasm_bindgen::prelude::*;
+use crate::maths::graph::{Node, GraphSearchMethod, SearchResult, BreadthFirst, Graph, GraphSearch};
+use super::{plane::generate_graph, generator::division};
 
-use crate::maths::graph::{Node, GraphSearchMethod, SearchResult, BreadthFirst, GraphSearch};
-use crate::maze_runner::{plane::generate_graph, generator::division};
-
-
-
+#[wasm_bindgen]
 pub struct Maze {
     plane: Vec<Vec<u8>>,
     runner: Box<dyn GraphSearch>,
-    paths: HashMap<Node, Vec<Node>>,
+    // paths: Vec<(Node, Node)>,
+    first_last: (Node, Node),
+    graph: Graph,
 }
 
+#[wasm_bindgen]
 impl Maze {
     pub fn new(width: usize, height: usize, search_method: GraphSearchMethod) -> Self {
         let plane = division(width, height);
         let graph = generate_graph(&plane);
+        let first_last = graph.first_and_last();
 
         let runner = match search_method {
-            GraphSearchMethod::AStar => {BreadthFirst::new(graph)},
-            GraphSearchMethod::BreadthFirst => {BreadthFirst::new(graph)},
-            GraphSearchMethod::DepthFirst => {BreadthFirst::new(graph)},
+            GraphSearchMethod::AStar => {BreadthFirst::new(graph.clone())},
+            GraphSearchMethod::BreadthFirst => {BreadthFirst::new(graph.clone())},
+            GraphSearchMethod::DepthFirst => {BreadthFirst::new(graph.clone())},
         };
 
         Maze { 
             plane, 
             runner: Box::new(runner),
-            paths: HashMap::new(), 
+            // paths: Vec::new(), 
+            first_last,
+            graph,
         }
     }
 
-    pub fn run(&mut self) -> Vec<u32>  {
-        let res = Vec::new();
-        let mut blocked: Vec<Node> = vec![];
+    pub fn first_and_last(&self) -> Vec<u16> {
+        vec![
+            self.first_last.0.x,
+            self.first_last.0.y,
+            self.first_last.1.x,
+            self.first_last.1.y
+        ]
+    }
 
+    pub fn all_edges(&self) -> Vec<u16> {
+        let mut res = vec![];
+
+        for (k, v) in self.graph.edges.iter() {
+            for node in v.iter() {
+                res.push(k.x);
+                res.push(k.y);
+                res.push(node.x);
+                res.push(node.y); 
+            }
+        }
+
+        res
+    }
+
+    pub fn run(&mut self) -> Vec<u16>  {
+        let mut res = Vec::new();
 
         match self.runner.next() {
-            SearchResult::Done => {res},
             SearchResult::Failed => {res},
-            SearchResult::Next(data) => {
-                for (k, v) in data.into_iter() {
-                    if v.len() == 0 {
-                        if self.paths.contains_key(&k) {
-                            self.paths.remove(&k);
-                        } 
-                        blocked.push(k);
+            SearchResult::Done(solved) => {
+                dbg!(&solved);
+                res.push(1);
+                for n1 in solved.iter() {
+                    res.push(n1.x);
+                    res.push(n1.y);
+                }
 
-                    } else {
-                        self.paths.insert(k, v);
+                res
+            },
+            SearchResult::Next(edges) => {
+                res.push(0);
+                for (k, v) in edges.into_iter() {
+                    for n1 in v.iter() {
+                        res.push(k.x);
+                        res.push(k.y);
+                        res.push(n1.x);
+                        res.push(n1.y);
                     }
                 }
 
-                self.flat_path(blocked)
+                res   
             },
         }
     }
 
-    fn flat_path(&mut self, to_remove: Vec<Node>) -> Vec<u32> {
-        let mut res = Vec::new();
-        let mut new_path = HashMap::<Node, Vec<Node>>::new();
-        
-        for (k, v) in self.paths.clone().into_iter() {
-            let mut edges: Vec<Node> = Vec::new();
-            for node in v.iter() {
-                if !to_remove.contains(node) {
-                    edges.push(*node);
-                    res.push(k.x);
-                    res.push(k.y);
-                    res.push(node.x);
-                    res.push(node.y);    
-                }
-            }
+    pub fn flat_plane(&self) -> Vec<u8> {
 
-            if edges.len() > 0 {
-                new_path.insert(k, edges);
-            }
+        let mut flat = Vec::new();
+
+        for row in self.plane.iter() {
+            flat.extend(row);
         }
 
-        self.paths = new_path;
-
-        res
+        return flat
     }
 }
 

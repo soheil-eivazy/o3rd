@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import Link from "next/link"
 import { Inter } from 'next/font/google'
+import { useContext } from "react"
+import { WASMContext } from "../context/WASM"
 
 import { Alert, Dropdown, Navbar } from "flowbite-react";
 
@@ -9,11 +11,20 @@ import { Alert, Dropdown, Navbar } from "flowbite-react";
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+  const ctx = useContext(WASMContext)
+
+  if (!ctx.wasm) {
+    return <>...</>
+  }
+
+
+
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
     >
-      <Alert color="info">Alert!</Alert>
+      <Alert color="info">Computed from WASM: 4+3={ctx.wasm.add(4,3)}</Alert>
       <Navbar
         fluid={true}
         rounded={true}

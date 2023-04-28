@@ -17,10 +17,10 @@ export const WASMContextProvider: React.FC<WASMContextProviderProps> = ({
   useMountEffectOnce(() => {
     (async() => {
       const wasm = await import("sketches");
-      const memory = await import("sketches/sketches_bg.wasm");
-      const p5 = await import('react-p5');
+      // const memory = await import("sketches/sketches_bg.wasm");
+      // const p5 = await import('react-p5');
       await wasm.default();
-      setState({ wasm, memory, p5 });
+      setState({ wasm });
     })()
   })
 
@@ -33,8 +33,8 @@ export const WASMContextProvider: React.FC<WASMContextProviderProps> = ({
 
 interface IWASMContext {
   wasm?: typeof import('sketches')
-  memory?: typeof import('sketches/sketches_bg.wasm')
-  p5?: typeof import('react-p5')
+  // memory?: typeof import('sketches/sketches_bg.wasm')
+  // p5?: typeof import('react-p5')
 }
 
 interface WASMContextProviderProps {

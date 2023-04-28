@@ -1,5 +1,6 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
+import {WASMContextProvider} from '../context/WASM'
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -8,5 +9,9 @@ export default function App({ Component, pageProps }: AppProps) {
   // Though, in development React renders twice when Strict Mode is enabled: https://reactjs.org/docs/strict-mode.html
   // That's why it must be limited to a single mount run
 
-  return <Component {...pageProps} />
+  return (
+    <WASMContextProvider>
+      <Component {...pageProps} />
+    </WASMContextProvider>
+  )
 }

@@ -1,4 +1,4 @@
-use wasm_bindgen::prelude::*;
+// use wasm_bindgen::prelude::*;
 use crate::maze_runner::generator::{division};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -9,7 +9,7 @@ pub struct Point {
 
 
 
-#[wasm_bindgen]
+// #[wasm_bindgen]
 struct Maze {
     width: usize,
     height: usize,
@@ -55,7 +55,6 @@ impl Maze {
                     self.neighbors(i % (self.width), i / (self.width))
                 }    
             )
-
         }
 
         grid
@@ -141,7 +140,7 @@ impl BFRunner {
 }
 
 
-#[wasm_bindgen]
+// #[wasm_bindgen]
 pub struct BreadthFirst {
     maze: Maze,
     graph: Vec<Vec<Vec<Point>>>,
@@ -151,7 +150,7 @@ pub struct BreadthFirst {
 }
 
 
-#[wasm_bindgen]
+// #[wasm_bindgen]
 impl BreadthFirst {
     pub fn new(width: usize, height: usize) -> Self {
         let mut maze = Maze::new(width, height);
@@ -257,7 +256,7 @@ struct Node {
 }
 
 
-#[wasm_bindgen]
+// #[wasm_bindgen]
 pub struct DepthFirst {
     maze: Maze,
     graph: Vec<Vec<Vec<Point>>>,
@@ -268,7 +267,7 @@ pub struct DepthFirst {
 }
 
 
-#[wasm_bindgen]
+// #[wasm_bindgen]
 impl DepthFirst {
     pub fn new(width: usize, height: usize) -> Self {
         let mut maze = Maze::new(width, height);

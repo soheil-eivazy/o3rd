@@ -3,59 +3,54 @@ use crate::maths::graph::{Graph, Node};
 
 pub fn generate_graph(plane: &Vec<Vec<u8>>) -> Graph {
     let mut graph = Graph::new();
-    for (i, row) in plane.iter().enumerate() {
-        for (j, b) in row.iter().enumerate() {
+    for (y, row) in plane.iter().enumerate() {
+        for (x, b) in row.iter().enumerate() {
 
-            if *b != 1 {
-                continue;
-            }
+            if *b != 1 { continue;}
 
-            if !node_condition(i, j, plane) {
-                continue;
-            }
+            let ways = (plane[y-1][x] * 1) + (plane[y][x+1] * 2) + (plane[y+1][x] * 4) + (plane[y][x-1] * 8);
+            if [5, 10].contains(&ways) { continue;}
 
-            let node = Node::new(i as u32, j as u32);
-            if graph.add_node(node) {
-                continue;
-            }
+            let node = Node::new(x as u16, y as u16);
+            graph.add_node(node);
 
-            let mut ti = i + 1;
-            while ti < plane.len() {
-                if add_edge(&mut graph, node, plane, ti, j) {
+            let mut ty = y + 1;
+            while ty < plane.len() {
+                if add_edge(&mut graph, node, plane, x, ty) {
                     break;
                 }
 
-                ti += 1;
+                ty += 1;
             }
 
-            if i > 0 {
-                let mut ti = i - 1;
-                while ti > 0 {
-                    if add_edge(&mut graph, node, plane, ti, j) {
+            if y > 0 {
+                let mut ty = y - 1;
+                while ty > 0 {
+                    if add_edge(&mut graph, node, plane, x, ty) {
                         break;
                     }
     
-                    ti -= 1;
+                    ty -= 1;
                 }
             }
 
-            let mut tj = j + 1;
-            while tj > 0 && tj < plane.len() {
-                if add_edge(&mut graph, node, plane, i, tj) {
+            let mut tx = x + 1;
+            while tx > 0 && tx < plane.len() {
+                if add_edge(&mut graph, node, plane, tx, y) {
                     break;
                 }
 
-                tj += 1;
+                tx += 1;
             }
 
-            if j > 0 {
-                let mut tj = j - 1;
-                while tj > 0 {
-                    if add_edge(&mut graph, node, plane, i, tj) {
+            if x > 0 {
+                let mut tx = x - 1;
+                while tx > 0 {
+                    if add_edge(&mut graph, node, plane, tx, y) {
                         break;
                     }
     
-                    tj -= 1;
+                    tx -= 1;
                 }
             }
         }
@@ -64,29 +59,19 @@ pub fn generate_graph(plane: &Vec<Vec<u8>>) -> Graph {
 }
 
 
-
-fn add_edge(graph: &mut Graph, node: Node, plane: &Vec<Vec<u8>>, i: usize, j: usize) -> bool {
-    if plane[i][j] != 1 {
+fn add_edge(graph: &mut Graph, node: Node, plane: &Vec<Vec<u8>>, x: usize, y: usize) -> bool {
+    if plane[y][x] != 1 {
         return true;
     }
 
-    if !node_condition(i, j, plane) {
+    let ways = (plane[y-1][x] * 1) + (plane[y][x+1] * 2) + (plane[y+1][x] * 4) + (plane[y][x-1] * 8);
+
+    if [5, 10].contains(&ways) {
         return false;
     }
     
-    let next_node = Node::new(i as u32, j as u32);
+    let next_node = Node::new(x as u16, y as u16);
     graph.add_node(next_node.clone());
     graph.add_edge((node, next_node));
     true
-}
-
-
-fn node_condition(i: usize, j: usize, plane: &Vec<Vec<u8>>) -> bool {
-    i == 0 || 
-    i == plane.len() - 1 || 
-    j == 0 || 
-    j == plane[0].len() - 1 || 
-    plane[i-1][j] != plane[i+1][j] || 
-    plane[i][j-1] != plane[i][j+1] ||
-    plane[i-1][j] == plane[i][j-1] 
 }
