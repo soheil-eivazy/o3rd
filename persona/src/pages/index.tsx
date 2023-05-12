@@ -1,25 +1,18 @@
-import Image from 'next/image'
-import Link from "next/link"
-import { Inter } from 'next/font/google'
-import { useContext } from "react"
-import { WASMContext } from "../context/WASM"
-
-import { Alert, Dropdown, Navbar } from "flowbite-react";
+import IntroSketch from "../components/Sketches/Intro/Intro"
 
 
-
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-
-  const ctx = useContext(WASMContext)
-
-  if (!ctx.wasm) {
-    return <>...</>
-  }
-
   return (
-    <main
+    <div className="bg-primary w-screen h-screen font-Josefin">
+      <div className="w-screen h-screen flex justify-center items-center intro-sketch ">
+        <IntroSketch />
+      </div>
+    </div>
+  )
+}
+
+{/* <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
     >
       <Navbar
@@ -112,6 +105,4 @@ export default function Home() {
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
         
       </div>
-    </main>
-  )
-}
+    </main> */}
