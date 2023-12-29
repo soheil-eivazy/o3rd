@@ -8,13 +8,12 @@ use axum::{
         delete, 
         patch
     }, 
-    body::Body, 
     http::Method
 };
 use tower_http::cors::{CorsLayer, Any};
 
 
-pub async fn create_route() -> Router<(), Body> {
+pub async fn create_route() -> Router {
     let cors = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST, Method::DELETE, Method::PATCH])
         .allow_origin(Any);

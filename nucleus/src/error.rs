@@ -1,24 +1,18 @@
-use crate::model;
+use derive_more::From;
 use mongodb::error::Error as MongoError;
+use mongodb::bson::oid::Error as ObjectIdError;
+
 pub type Result<T> = core::result::Result<T, Error>;
 
-#[derive(Debug)]
+
+#[derive(Debug, From)]
 pub enum Error {
-	// -- Modules
-	Model(model::Error),
+    MissingEnv(&'static str),
+	WrongFormat(&'static str),
+    #[from]
     Mongo(MongoError),
-}
-
-impl From<model::Error> for Error {
-	fn from(val: model::Error) -> Self {
-		Self::Model(val)
-	}
-}
-
-impl From<MongoError> for Error {
-    fn from(val: MongoError) -> Self {
-		Self::Mongo(val)
-	}
+    #[from]
+    ObjectId(ObjectIdError),
 }
 
 impl core::fmt::Display for Error {
