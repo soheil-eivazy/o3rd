@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { Maze, GraphSearchMethod } from "../../../sketches/pkg"
+import { Maze, GraphSearchMethod } from "../../../pkg"
 // import { memory } from "sketches/sketches_bg.wasm"
 import p5Types from "p5"
 // import { useContext } from "react"
