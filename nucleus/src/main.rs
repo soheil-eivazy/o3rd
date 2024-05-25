@@ -1,6 +1,7 @@
 mod error;
 mod config;
 mod sketch;
+mod bookkeeper;
 
 
 use axum::{Router, routing::get, Extension};
@@ -26,6 +27,7 @@ async fn main() -> error::Result<()> {
     let routes = Router::new()
         .route("/", get(|| async {"this is the root"}))
         .nest("/sketch", sketch::routes())
+        .nest("/bookkeeper", bookkeeper::router::routes())
         .layer(Extension(Arc::new(app_state)));
         
 
